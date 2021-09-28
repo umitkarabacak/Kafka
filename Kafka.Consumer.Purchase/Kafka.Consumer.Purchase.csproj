@@ -2,13 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>dc65d4bf-5aa4-4dbd-b24b-34e1e33aaace</UserSecretsId>
+    <UserSecretsId>5febd624-deef-4d1d-86bd-d39f94225b66</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Confluent.Kafka" Version="1.8.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
   </ItemGroup>
 
 </Project>

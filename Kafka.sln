@@ -8,6 +8,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{DB8704C1-BAD6-466D-B185-5BD7BE605BE5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{44F3ABCF-64FA-4D8D-BDC3-664F6D12C3F0}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "producer", "producer", "{D1A505E0-D3B3-4CC6-BC0F-7EA1F35E7625}"
 EndProject
@@ -18,6 +21,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka.Consumer.Email", "Kafka.Consumer.Email\Kafka.Consumer.Email.csproj", "{70C1822C-ABAA-4104-9AC2-9864561658C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka.Consumer.Sms", "Kafka.Consumer.Sms\Kafka.Consumer.Sms.csproj", "{3DAD32A0-8FE7-4020-91D0-3507EF645B2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka.Consumer.Purchase", "Kafka.Consumer.Purchase\Kafka.Consumer.Purchase.csproj", "{16995044-C442-44E9-A239-2F5321B55E54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +42,10 @@ Global
 		{3DAD32A0-8FE7-4020-91D0-3507EF645B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DAD32A0-8FE7-4020-91D0-3507EF645B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DAD32A0-8FE7-4020-91D0-3507EF645B2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16995044-C442-44E9-A239-2F5321B55E54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16995044-C442-44E9-A239-2F5321B55E54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16995044-C442-44E9-A239-2F5321B55E54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16995044-C442-44E9-A239-2F5321B55E54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +56,7 @@ Global
 		{6E50472D-FA70-46AD-B694-4E48CDBF9E39} = {72137726-8F71-4357-98F0-7DAA5B3C8316}
 		{70C1822C-ABAA-4104-9AC2-9864561658C5} = {6E50472D-FA70-46AD-B694-4E48CDBF9E39}
 		{3DAD32A0-8FE7-4020-91D0-3507EF645B2C} = {6E50472D-FA70-46AD-B694-4E48CDBF9E39}
+		{16995044-C442-44E9-A239-2F5321B55E54} = {6E50472D-FA70-46AD-B694-4E48CDBF9E39}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AF65BFF5-D29C-43A1-9D1B-B26BF9DD34A5}
