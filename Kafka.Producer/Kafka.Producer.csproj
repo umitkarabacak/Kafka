@@ -11,4 +11,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Kafka.Producer.Application\Kafka.Producer.Application.csproj" />
+    <ProjectReference Include="..\Kafka.Producer.Domain\Kafka.Producer.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
