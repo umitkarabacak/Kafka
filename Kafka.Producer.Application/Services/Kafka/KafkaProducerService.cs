@@ -28,95 +28,33 @@ namespace Kafka.Producer.Application.Services.Kafka
         public async Task<SendMailResponse> SendMail(SendMailRequest sendMailRequest)
         {
             _logger.LogInformation(JsonSerializer.Serialize(sendMailRequest));
-
-            await SendTemp();
-
-            return await Task.FromResult(
-                new SendMailResponse()
-            );
-        }
-
-        public async Task SendTemp()
-        {
-            string[] users = { "eabara", "jsmith", "sgarcia", "jbernard", "htanaka", "awalther" };
-            string[] items = { "book", "alarm clock", "t-shirts", "gift card", "batteries" };
+            var responseObject = new SendMailResponse(Guid.NewGuid());
 
             using (var producer = new ProducerBuilder<string, string>(_producerConfig).Build())
             {
-                var numProduced = 0;
-                const int numMessages = 10;
-                for (int i = 0; i < numMessages; ++i)
+                producer.Produce(TopicNamePurchase, new Message<string, string>
                 {
-                    Random rnd = new Random();
-                    var user = users[rnd.Next(users.Length)];
-                    var item = items[rnd.Next(items.Length)];
+                    Key = Guid.NewGuid().ToString(),
+                    Value = sendMailRequest.ToString()
+                }, (deliveryReport) =>
+                {
+                    _logger.LogInformation("SEND MAIL REQUEST RESPONSE \t" + JsonSerializer.Serialize(deliveryReport));
 
-                    producer.Produce(TopicNamePurchase, new Message<string, string>
+                    if (deliveryReport.Error.Code != ErrorCode.NoError)
                     {
-                        Key = user,
-                        Value = item
-                    }, (deliveryReport) =>
+                        _logger.LogInformation($"Failed to deliver message: {deliveryReport.Error.Reason}");
+                    }
+                    else
                     {
-                        if (deliveryReport.Error.Code != ErrorCode.NoError)
-                        {
-                            _logger.LogInformation($"Failed to deliver message: {deliveryReport.Error.Reason}");
-                        }
-                        else
-                        {
-                            _logger.LogInformation($"Produced event to topic {TopicNamePurchase}: key = {user,-10} value = {item}");
-                            numProduced += 1;
-                        }
-                    });
-                }
-
+                        _logger.LogInformation($"Produced event to topic {TopicNamePurchase}: key = {JsonSerializer.Serialize(responseObject)} value = {JsonSerializer.Serialize(sendMailRequest)}");
+                    }
+                });
                 producer.Flush(TimeSpan.FromSeconds(10));
-                _logger.LogInformation($"{numProduced} messages were produced to topic {TopicNamePurchase}");
-
-                await Task.CompletedTask;
             }
+
+            return await Task.FromResult(
+                responseObject
+            );
         }
-
-        /*
-            const string topic = "purchases";
-            var producerConfig = new ProducerConfig
-            {
-                BootstrapServers = "localhost:9092",
-            };
-
-            string[] users = { "eabara", "jsmith", "sgarcia", "jbernard", "htanaka", "awalther" };
-            string[] items = { "book", "alarm clock", "t-shirts", "gift card", "batteries" };
-
-            using (var producer = new ProducerBuilder<string, string>(producerConfig).Build())
-            {
-                var numProduced = 0;
-                const int numMessages = 10;
-                for (int i = 0; i < numMessages; ++i)
-                {
-                    Random rnd = new Random();
-                    var user = users[rnd.Next(users.Length)];
-                    var item = items[rnd.Next(items.Length)];
-
-                    producer.Produce(topic, new Message<string, string>
-                    {
-                        Key = user,
-                        Value = item
-                    }, (deliveryReport) =>
-                    {
-                        if (deliveryReport.Error.Code != ErrorCode.NoError)
-                        {
-                            Console.WriteLine($"Failed to deliver message: {deliveryReport.Error.Reason}");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Produced event to topic {topic}: key = {user,-10} value = {item}");
-                            numProduced += 1;
-                        }
-                    });
-                }
-
-                producer.Flush(TimeSpan.FromSeconds(10));
-                Console.WriteLine($"{numProduced} messages were produced to topic {topic}");
-            }
-        */
     }
 }

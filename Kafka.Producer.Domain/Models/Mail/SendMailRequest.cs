@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Kafka.Producer.Domain.Models.Mail
 {
@@ -18,6 +19,12 @@ namespace Kafka.Producer.Domain.Models.Mail
         public List<string> AttachmentPaths { get; set; } = new();
 
         public string CallbackUrl { get; set; }
+
         public bool IsCallback => !string.IsNullOrWhiteSpace(CallbackUrl);
+
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this);
+        }
     }
 }

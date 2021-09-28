@@ -1,7 +1,7 @@
 using Confluent.Kafka;
-using Microsoft.Extensions.Configuration;
+using Kafka.Producer.Domain.Models.Mail;
 using System;
-using System.Linq;
+using System.Text.Json;
 using System.Threading;
 
 namespace Kafka.Consumer.Purchase
@@ -21,7 +21,7 @@ namespace Kafka.Consumer.Purchase
             CancellationTokenSource cts = new CancellationTokenSource();
             Console.CancelKeyPress += (_, e) =>
             {
-                e.Cancel = true; // prevent the process from terminating.
+                e.Cancel = true;
                 cts.Cancel();
             };
 
@@ -33,12 +33,17 @@ namespace Kafka.Consumer.Purchase
                     while (true)
                     {
                         var cr = consumer.Consume(cts.Token);
-                        Console.WriteLine($"Consumed event from topic {topic} with key {cr.Message.Key,-10} and value {cr.Message.Value}");
+
+                        var consumeDataKey = Guid.Parse(cr.Message.Key);
+                        Console.WriteLine(JsonSerializer.Serialize(consumeDataKey));
+
+                        var consumeDataValue = JsonSerializer.Deserialize<SendMailRequest>(cr.Message.Value);
+                        Console.WriteLine(JsonSerializer.Serialize(consumeDataValue));
                     }
                 }
-                catch (OperationCanceledException)
+                catch (OperationCanceledException operationCanceledException)
                 {
-                    // Ctrl-C was pressed.
+                    Console.WriteLine(JsonSerializer.Serialize(operationCanceledException));
                 }
                 finally
                 {

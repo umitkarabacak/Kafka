@@ -4,6 +4,16 @@ namespace Kafka.Producer.Domain.Models.Mail
 {
     public class SendMailResponse
     {
-        public Guid TraceId { get; set; } = Guid.NewGuid();
+        public SendMailResponse()
+        {
+
+        }
+
+        public SendMailResponse(Guid traceId)
+        {
+            TraceId = traceId;
+        }
+
+        public Guid TraceId { get; set; }
     }
 }
