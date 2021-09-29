@@ -30,9 +30,9 @@ namespace Kafka.Application.Services.Kafka
 
             using (var producer = new ProducerBuilder<string, string>(_producerConfig).Build())
             {
-                await _kafkaConfigurationService.CreateTopic(AppConsts.TopicNameEmail);
+                await _kafkaConfigurationService.CreateTopic(AppConsts.TopicNamePurchase);
 
-                producer.Produce(AppConsts.TopicNameEmail, new Message<string, string>
+                producer.Produce(AppConsts.TopicNamePurchase, new Message<string, string>
                 {
                     Key = Guid.NewGuid().ToString(),
                     Value = sendMailRequest.ToString()

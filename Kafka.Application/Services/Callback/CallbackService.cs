@@ -9,6 +9,11 @@ namespace Kafka.Application.Services.Callback
     {
         private readonly ILogger<CallbackService> _logger;
 
+        public CallbackService()
+        {
+
+        }
+
         public CallbackService(ILogger<CallbackService> logger)
         {
             _logger = logger;
@@ -16,7 +21,7 @@ namespace Kafka.Application.Services.Callback
 
         public async Task<SendCallbackResponse> SetCallback(SendCallbackRequest sendCallbackRequest)
         {
-            _logger.LogInformation("Set Callback\t" + JsonSerializer.Serialize(sendCallbackRequest));
+            _logger?.LogInformation("Set Callback\t" + JsonSerializer.Serialize(sendCallbackRequest));
 
             return await Task.FromResult(
                 new SendCallbackResponse()

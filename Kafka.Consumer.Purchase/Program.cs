@@ -1,4 +1,5 @@
 using Confluent.Kafka;
+using Kafka.Domain;
 using Kafka.Domain.Models.Mail;
 using System;
 using System.Text.Json;
@@ -10,7 +11,6 @@ namespace Kafka.Consumer.Purchase
     {
         private static void Main(string[] args)
         {
-            const string topic = "purchases";
             var consumerConfig = new ConsumerConfig
             {
                 BootstrapServers = "localhost:9092",
@@ -27,7 +27,7 @@ namespace Kafka.Consumer.Purchase
 
             using (var consumer = new ConsumerBuilder<string, string>(consumerConfig).Build())
             {
-                consumer.Subscribe(topic);
+                consumer.Subscribe(AppConsts.TopicNamePurchase);
                 try
                 {
                     while (true)
