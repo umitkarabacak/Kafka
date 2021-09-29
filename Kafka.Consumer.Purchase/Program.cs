@@ -1,5 +1,5 @@
 using Confluent.Kafka;
-using Kafka.Producer.Domain.Models.Mail;
+using Kafka.Domain.Models.Mail;
 using System;
 using System.Text.Json;
 using System.Threading;

@@ -1,6 +1,6 @@
 using Confluent.Kafka;
-using Kafka.Producer.Application.Services.Callback;
-using Kafka.Producer.Application.Services.Kafka;
+using Kafka.Application.Services.Callback;
+using Kafka.Application.Services.Kafka;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

@@ -1,7 +1,7 @@
-﻿using Kafka.Producer.Application.Services.Callback;
-using Kafka.Producer.Application.Services.Kafka;
-using Kafka.Producer.Domain.Models.Callback;
-using Kafka.Producer.Domain.Models.Mail;
+﻿using Kafka.Application.Services.Callback;
+using Kafka.Application.Services.Kafka;
+using Kafka.Domain.Models.Callback;
+using Kafka.Domain.Models.Mail;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Net;
@@ -35,8 +35,8 @@ namespace Kafka.Producer.Controllers
 
             var response = await _kafkaProducerService.SendMail(sendMailRequest);
 
-            if (sendMailRequest.IsCallback)
-                await _callbackService.SetCallback(new SendCallbackRequest(sendMailRequest.CallbackUrl, response.TraceId));
+            //if (sendMailRequest.IsCallback)
+            //    await _callbackService.SetCallback(new SendCallbackRequest(sendMailRequest.CallbackUrl, response.TraceId));
 
             return Ok(response);
         }
