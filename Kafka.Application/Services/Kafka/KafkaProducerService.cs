@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using Kafka.Domain;
 using Kafka.Domain.Models.Mail;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -12,16 +13,15 @@ namespace Kafka.Application.Services.Kafka
     {
         private readonly ILogger<KafkaProducerService> _logger;
         private readonly ProducerConfig _producerConfig;
-
-        private const string TopicNamePurchase = "purchases";
-        private const string TopicNameEmail = "Email";
-        private const string TopicNameSms = "Sms";
+        private readonly IKafkaConfigurationService _kafkaConfigurationService;
 
         public KafkaProducerService(ILogger<KafkaProducerService> logger
-            , IOptions<ProducerConfig> options)
+            , IOptions<ProducerConfig> options
+            , IKafkaConfigurationService kafkaConfigurationService)
         {
             _logger = logger;
             _producerConfig = options.Value;
+            _kafkaConfigurationService = kafkaConfigurationService;
         }
 
         public async Task<SendMailResponse> SendMail(SendMailRequest sendMailRequest)
@@ -30,7 +30,9 @@ namespace Kafka.Application.Services.Kafka
 
             using (var producer = new ProducerBuilder<string, string>(_producerConfig).Build())
             {
-                producer.Produce(TopicNamePurchase, new Message<string, string>
+                await _kafkaConfigurationService.CreateTopic(AppConsts.TopicNameEmail);
+
+                producer.Produce(AppConsts.TopicNameEmail, new Message<string, string>
                 {
                     Key = Guid.NewGuid().ToString(),
                     Value = sendMailRequest.ToString()
@@ -44,15 +46,13 @@ namespace Kafka.Application.Services.Kafka
                     }
                     else
                     {
-                        _logger.LogInformation($"Produced event to topic {TopicNamePurchase}: key = {JsonSerializer.Serialize(responseObject)} value = {JsonSerializer.Serialize(sendMailRequest)}");
+                        _logger.LogInformation($"Produced event to topic {AppConsts.TopicNameEmail}: key = {JsonSerializer.Serialize(responseObject)} value = {JsonSerializer.Serialize(sendMailRequest)}");
                     }
                 });
                 producer.Flush(TimeSpan.FromSeconds(10));
             }
 
-            return await Task.FromResult(
-                responseObject
-            );
+            return responseObject;
         }
     }
 }

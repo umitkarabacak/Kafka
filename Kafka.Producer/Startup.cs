@@ -36,6 +36,7 @@ namespace Kafka.Producer
             services.Configure<ProducerConfig>(Configuration.GetSection(nameof(ProducerConfig)));
 
 
+            services.AddSingleton<IKafkaConfigurationService, KafkaConfigurationService>();
             services.AddSingleton<IKafkaProducerService, KafkaProducerService>();
             services.AddSingleton<ICallbackService, CallbackService>();
         }
