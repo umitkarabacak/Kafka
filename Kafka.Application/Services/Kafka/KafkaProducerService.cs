@@ -26,7 +26,6 @@ namespace Kafka.Application.Services.Kafka
 
         public async Task<SendMailResponse> SendMail(SendMailRequest sendMailRequest)
         {
-            _logger.LogInformation(JsonSerializer.Serialize(sendMailRequest));
             var responseObject = new SendMailResponse(Guid.NewGuid());
 
             using (var producer = new ProducerBuilder<string, string>(_producerConfig).Build())
@@ -37,11 +36,11 @@ namespace Kafka.Application.Services.Kafka
                     Value = sendMailRequest.ToString()
                 }, (deliveryReport) =>
                 {
-                    _logger.LogInformation("SEND MAIL REQUEST RESPONSE \t" + JsonSerializer.Serialize(deliveryReport));
+                    _logger.LogInformation($"Send mail response \t {JsonSerializer.Serialize(deliveryReport)}");
 
                     if (deliveryReport.Error.Code != ErrorCode.NoError)
                     {
-                        _logger.LogInformation($"Failed to deliver message: {deliveryReport.Error.Reason}");
+                        _logger.LogError($"Failed to deliver message: {deliveryReport.Error.Reason}");
                     }
                     else
                     {

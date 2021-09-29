@@ -35,8 +35,8 @@ namespace Kafka.Producer.Controllers
 
             var response = await _kafkaProducerService.SendMail(sendMailRequest);
 
-            //if (sendMailRequest.IsCallback)
-            //    await _callbackService.SetCallback(new SendCallbackRequest(sendMailRequest.CallbackUrl, response.TraceId));
+            if (sendMailRequest.IsCallback)
+                await _callbackService.SetCallback(new SendCallbackRequest(sendMailRequest.CallbackUrl, response.TraceId));
 
             return Ok(response);
         }

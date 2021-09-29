@@ -8,7 +8,7 @@ namespace Kafka.Consumer.Purchase
 {
     public class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             const string topic = "purchases";
             var consumerConfig = new ConsumerConfig
@@ -35,10 +35,10 @@ namespace Kafka.Consumer.Purchase
                         var cr = consumer.Consume(cts.Token);
 
                         var consumeDataKey = Guid.Parse(cr.Message.Key);
-                        Console.WriteLine(JsonSerializer.Serialize(consumeDataKey));
+                        Console.WriteLine($"Consume Key:\t {JsonSerializer.Serialize(consumeDataKey)} \n\n");
 
                         var consumeDataValue = JsonSerializer.Deserialize<SendMailRequest>(cr.Message.Value);
-                        Console.WriteLine(JsonSerializer.Serialize(consumeDataValue));
+                        Console.WriteLine($"Consume Data:\t {JsonSerializer.Serialize(consumeDataValue)} \n\n");
                     }
                 }
                 catch (OperationCanceledException operationCanceledException)
