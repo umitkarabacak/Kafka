@@ -1,6 +1,5 @@
 using Confluent.Kafka;
 using Kafka.Domain;
-using Kafka.Domain.Models.Mail;
 using System;
 using System.Text.Json;
 using System.Threading;
@@ -27,18 +26,18 @@ namespace Kafka.Consumer.Purchase
 
             using (var consumer = new ConsumerBuilder<string, string>(consumerConfig).Build())
             {
-                consumer.Subscribe(AppConsts.TopicNamePurchase);
+                consumer.Subscribe(AppConsts.TopicNameTestChannel);
                 try
                 {
                     while (true)
                     {
                         var cr = consumer.Consume(cts.Token);
 
-                        var consumeDataKey = Guid.Parse(cr.Message.Key);
-                        Console.WriteLine($"Consume Key:\t {JsonSerializer.Serialize(consumeDataKey)} \n\n");
+                        var consumeDataKey = cr.Message.Key;
+                        Console.WriteLine(consumeDataKey);
 
-                        var consumeDataValue = JsonSerializer.Deserialize<SendMailRequest>(cr.Message.Value);
-                        Console.WriteLine($"Consume Data:\t {JsonSerializer.Serialize(consumeDataValue)} \n\n");
+                        var consumeDataValue = cr.Message.Value;
+                        Console.WriteLine(consumeDataValue);
                     }
                 }
                 catch (OperationCanceledException operationCanceledException)

@@ -2,6 +2,7 @@
 using Kafka.Application.Services.Kafka;
 using Kafka.Domain.Models.Callback;
 using Kafka.Domain.Models.Mail;
+using Kafka.Domain.Models.Sms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Net;
@@ -27,6 +28,16 @@ namespace Kafka.Producer.Controllers
             _callbackService = callbackService;
         }
 
+        [HttpPost("send-test/{sampleText}")]
+        public async Task<IActionResult> SendTest(string sampleText)
+        {
+            _logger.LogInformation($"Send Test {JsonSerializer.Serialize(sampleText)}");
+
+            var response = await _kafkaProducerService.SendTest(sampleText);
+
+            return Ok(response);
+        }
+
         [HttpPost("send-email")]
         [ProducesResponseType(typeof(SendMailResponse), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> SendMailMessage(SendMailRequest sendMailRequest)
@@ -35,8 +46,24 @@ namespace Kafka.Producer.Controllers
 
             var response = await _kafkaProducerService.SendMail(sendMailRequest);
 
-            //if (sendMailRequest.IsCallback)
-            //    await _callbackService.SetCallback(new SendCallbackRequest(sendMailRequest.CallbackUrl, response.TraceId));
+            if (sendMailRequest.IsCallback)
+            {
+                var callbackRequest = new SendCallbackRequest(sendMailRequest.CallbackUrl, response.TraceId);
+                _logger.LogInformation($"Send Callback {JsonSerializer.Serialize(callbackRequest)}");
+
+                await _callbackService.SetCallback(callbackRequest);
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("send-sms")]
+        [ProducesResponseType(typeof(SendSmsResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> SendSmsMessage(SendSmsRequest sendSmsRequest)
+        {
+            _logger.LogInformation($"Send Sms {JsonSerializer.Serialize(sendSmsRequest)}");
+
+            var response = await _kafkaProducerService.SendSms(sendSmsRequest);
 
             return Ok(response);
         }

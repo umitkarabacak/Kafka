@@ -1,26 +1,56 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Confluent.Kafka;
+using Kafka.Domain;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json;
+using System.Threading;
 
 namespace Kafka.Consumer.Email
 {
     public class Program
     {
-        public static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
-        }
+            var consumerConfig = new ConsumerConfig
+            {
+                BootstrapServers = "localhost:9092",
+                GroupId = "EMAIL",
+                AutoOffsetReset = AutoOffsetReset.Earliest
+            };
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
+            CancellationTokenSource cts = new CancellationTokenSource();
+            Console.CancelKeyPress += (_, e) =>
+            {
+                e.Cancel = true;
+                cts.Cancel();
+            };
+
+            using (var consumer = new ConsumerBuilder<string, string>(consumerConfig).Build())
+            {
+                consumer.Subscribe(AppConsts.TopicNameEmail);
+                try
                 {
-                    webBuilder.UseStartup<Startup>();
-                });
+                    while (true)
+                    {
+                        var cr = consumer.Consume(cts.Token);
+
+                        var consumeDataKey = cr.Message.Key;
+                        Console.WriteLine(JsonSerializer.Serialize(consumeDataKey));
+
+                        var consumeDataValue = cr.Message.Value;
+                        Console.WriteLine(JsonSerializer.Serialize(consumeDataValue));
+                    }
+                }
+                catch (OperationCanceledException operationCanceledException)
+                {
+                    Console.WriteLine(JsonSerializer.Serialize(operationCanceledException));
+                }
+                finally
+                {
+                    consumer.Close();
+                }
+            }
+
+            Console.ReadKey();
+        }
     }
 }
