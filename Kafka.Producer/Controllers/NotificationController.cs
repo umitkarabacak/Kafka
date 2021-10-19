@@ -3,6 +3,7 @@ using Kafka.Application.Services.Kafka;
 using Kafka.Domain.Models.Callback;
 using Kafka.Domain.Models.Mail;
 using Kafka.Domain.Models.Sms;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Net;
@@ -39,7 +40,7 @@ namespace Kafka.Producer.Controllers
         }
 
         [HttpPost("send-email")]
-        [ProducesResponseType(typeof(SendMailResponse), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(SendMailResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> SendMailMessage(SendMailRequest sendMailRequest)
         {
             _logger.LogInformation($"Send Mail {JsonSerializer.Serialize(sendMailRequest)}");
@@ -58,7 +59,7 @@ namespace Kafka.Producer.Controllers
         }
 
         [HttpPost("send-sms")]
-        [ProducesResponseType(typeof(SendSmsResponse), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(SendSmsResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> SendSmsMessage(SendSmsRequest sendSmsRequest)
         {
             _logger.LogInformation($"Send Sms {JsonSerializer.Serialize(sendSmsRequest)}");
